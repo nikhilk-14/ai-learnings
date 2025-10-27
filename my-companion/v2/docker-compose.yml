@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  companion-v2:
+    build: .
+    ports:
+      - "8501:8501"
+    # volumes:
+    #   - ./data:/app/data  # Optional: Remove for stateless deployment
+    environment:
+      - LLM_BASE_URL=http://host.docker.internal:1234/v1
+      - LLM_API_KEY=lm-studio

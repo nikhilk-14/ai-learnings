@@ -1,0 +1,79 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.docker
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Data and user files
+data/
+!data/.gitkeep
+
+# Vector database
+data/vectordb/
+
+# Logs and audit
+*.log
+logs/
+audit/
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Models and cache
+models/
+.cache/
+sentence_transformers_cache/
+
+# Backup files
+*.backup
+*.bak
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# ChromaDB
+chroma.log
+chroma/
+
+# Streamlit
+.streamlit/
+
+# Docker
+.dockerignore
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Security
+secrets.json
+api_keys.txt
+*.key
+*.pem

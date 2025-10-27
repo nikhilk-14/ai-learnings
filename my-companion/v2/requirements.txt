@@ -1,0 +1,21 @@
+# Lightweight My Companion v2 - Minimal Dependencies
+# Core Framework (same as v1)
+streamlit>=1.28.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# LLM Interface (minimal)
+openai>=1.3.0
+
+# Simple Vector Search (replace ChromaDB)
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.2
+
+# Basic Data Validation (lightweight)
+pydantic>=2.4.0
+
+# Simple Guardrails (no heavy frameworks)
+# We'll implement basic guardrails ourselves
+
+# Development
+pytest>=7.4.0
