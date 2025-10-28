@@ -102,6 +102,12 @@ def main():
         st.write(f"**Conversations:** {agent_stats['conversation_length']}")
         st.write(f"**Status:** {agent_stats['status']}")
         
+        # Cache stats
+        cache_stats = agent_stats.get('cache', {})
+        cache_entries = cache_stats.get('total_entries', 0)
+        cache_hits = cache_stats.get('total_hits', 0)
+        st.write(f"**Cache:** {cache_entries} entries, {cache_hits} hits")
+        
         # Data stats (V1 schema)
         st.write(f"**Projects:** {len(data.get('projects', []))}")
         skills_count = len(data.get('technical_skills', {})) if isinstance(data.get('technical_skills'), dict) else len(data.get('technical_skills', []))
@@ -133,6 +139,11 @@ def main():
         if st.button("🧹 Clear Chat History"):
             agent.clear_history()
             st.success("Chat history cleared!")
+            st.rerun()
+        
+        if st.button("🗑️ Clear Response Cache"):
+            agent.clear_cache()
+            st.success("Response cache cleared!")
             st.rerun()
     
     # Main content with tabs based on navigation selection

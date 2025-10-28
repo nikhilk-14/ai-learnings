@@ -55,9 +55,9 @@ class VectorDB:
         # Save updated index
         self.save_index()
     
-    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+    def search(self, query: str, top_k: int = 3) -> List[Dict[str, Any]]:
         """
-        Search for similar documents
+        Optimized search for similar documents with quality filtering
         Returns: List of {"text": str, "metadata": dict, "score": float}
         """
         if self.index.ntotal == 0:
@@ -67,20 +67,30 @@ class VectorDB:
         query_embedding = self.embedding_model.encode([query], convert_to_tensor=False)
         query_embedding = query_embedding / np.linalg.norm(query_embedding, axis=1, keepdims=True)
         
-        # Search in FAISS
-        scores, indices = self.index.search(query_embedding.astype('float32'), top_k)
+        # Search in FAISS with increased search space for better filtering
+        search_k = min(top_k * 2, self.index.ntotal)  # Search more to filter better
+        scores, indices = self.index.search(query_embedding.astype('float32'), search_k)
         
-        # Prepare results
+        # Prepare results with quality filtering
         results = []
+        score_threshold = 0.3  # Only include results with decent similarity
+        
         for score, idx in zip(scores[0], indices[0]):
-            if idx < len(self.metadata):  # Valid index
+            if idx < len(self.metadata) and score >= score_threshold:  # Quality filter
+                text = self.metadata[idx].get("text", "")
+                
+                # Truncate long texts for faster processing
+                if len(text) > 150:
+                    text = text[:147] + "..."
+                
                 results.append({
-                    "text": self.metadata[idx].get("text", ""),
+                    "text": text,
                     "metadata": self.metadata[idx],
                     "score": float(score)
                 })
         
-        return results
+        # Return only top_k results after filtering
+        return results[:top_k]
     
     def rebuild_from_data(self, data: Dict[str, Any]) -> int:
         """

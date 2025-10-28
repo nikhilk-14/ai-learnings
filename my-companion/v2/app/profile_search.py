@@ -13,8 +13,9 @@ def show(data, vector_db):
     # Search interface
     search_query = st.text_input("Search your profile:", placeholder="e.g., 'angular projects', 'cloud experience', 'leadership skills'")
     
-    max_results = st.number_input("Max results:", min_value=1, max_value=20, value=5)
-    
+    #max_results = st.number_input("Max results:", min_value=1, max_value=20, value=5)
+    max_results = 5  # Fixed to 5 for simplicity
+
     if st.button("🔍 Search", type="primary"):
         if search_query:
             with st.spinner("Searching..."):
