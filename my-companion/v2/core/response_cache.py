@@ -36,12 +36,13 @@ class ResponseCache:
         # Query types that benefit from caching
         self.cacheable_types = {
             'profile_analysis', 'career_suggestions', 'project_ideas', 
-            'skill_analysis'
+            'skill_analysis', 'technical_question', 'project_specific_question',
+            'general_question'  # Added common AI Assistant query types
         }
         
-        # Keywords that make queries less cacheable (too specific)
+        # Keywords that make queries less cacheable (too specific) - made more restrictive
         self.non_cacheable_keywords = {
-            'current', 'today', 'now', 'latest', 'recent', 'update', 'new'
+            'today', 'now', 'latest news', 'recent update', 'right now', 'this moment'
         }
     
     def _generate_cache_key(self, question: str, query_type: str, context_summary: str = "") -> str:
@@ -88,13 +89,20 @@ class ResponseCache:
         if query_type not in self.cacheable_types:
             return False
         
+        # Special handling for general_question - only cache if it's profile-related
+        if query_type == 'general_question':
+            profile_keywords = ['profile', 'experience', 'skills', 'project', 'work', 'background', 'about me', 'my']
+            if not any(keyword in question.lower() for keyword in profile_keywords):
+                return False
+        
         # Check for non-cacheable keywords
         question_lower = question.lower()
         if any(keyword in question_lower for keyword in self.non_cacheable_keywords):
             return False
         
         # Don't cache very short or very long questions
-        if len(question.strip()) < 10 or len(question) > 200:
+        question_len = len(question.strip())
+        if question_len < 10 or question_len > 500:
             return False
         
         return True
@@ -175,7 +183,7 @@ class ResponseCache:
             return
         
         # Don't cache error responses or very short responses
-        if len(response.strip()) < 20 or "error" in response.lower() or "sorry" in response.lower():
+        if len(response.strip()) < 20 or "error" in response.lower() or response.lower().startswith("sorry"):
             return
         
         cache_key = self._generate_cache_key(question, query_type, context_summary)
