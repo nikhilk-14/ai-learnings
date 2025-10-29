@@ -109,7 +109,7 @@ Task: Provide accurate, specific answer based on the profile information above.
 Be precise about technical details and avoid generalizations. If information is not available, state so clearly."""
     
     @staticmethod
-    def search_response(search_results: list, question: str) -> str:
+    def search_response(search_results, question: str) -> str:
         """Enhanced search-based response with technical accuracy focus"""
         if not search_results:
             return f"""Question: {question}
@@ -118,7 +118,11 @@ No specific information found in your profile.
 
 Task: Respond: "I don't have specific information about that in your profile. Could you provide more context or rephrase your question?" """
         
-        results_str = " | ".join(search_results)
+        # Handle both list and string formats for search_results
+        if isinstance(search_results, list):
+            results_str = " | ".join(search_results)
+        else:
+            results_str = str(search_results)
         
         return f"""Relevant Profile Information: {results_str}
 
@@ -158,7 +162,8 @@ Task: Answer using ONLY the specific information provided above.
         if query_type in ['general_question', 'technical_question', 'project_specific_question']:
             return template_func(context, question)
         elif query_type == 'search_response':
-            return template_func(context.get('search_results', []), question)
+            # Pass search_results directly, it's already converted to string in agent.py
+            return template_func(context.get('search_results', ''), question)
         else:
             return template_func(context)
     

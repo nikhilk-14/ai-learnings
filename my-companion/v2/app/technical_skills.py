@@ -41,6 +41,12 @@ def show(data):
         st.session_state.clear_skills_input = False
 
     # --- Category selectbox ---
+    # Safe check: ensure skills_data is a dictionary
+    if not isinstance(skills_data, dict):
+        skills_data = {}
+        data["technical_skills"] = skills_data
+        save_data(data)
+    
     existing_categories = [c for c in skills_data.keys() if c not in DEFAULT_CATEGORIES]
     category_options = DEFAULT_CATEGORIES + existing_categories + ["➕ Add New Category"]
 

@@ -218,7 +218,8 @@ class Agent:
             # Handle search results if available from vector search
             search_results = context.get("search_results", [])
             if search_results and isinstance(search_results[0], str):
-                enhanced_context["search_results"] = search_results
+                # Convert search results list to string for context compatibility
+                enhanced_context["search_results"] = " | ".join(search_results)
             
             # Validate context quality and fix critical issues
             validation_report = self.context_validator.validate_context(
