@@ -41,7 +41,7 @@ class Agent:
         self.prompt_templates = PromptTemplates()
         self.response_cache = ResponseCache()
         
-        # Initialize enhanced context system (Phase 2A)
+        # Initialize enhanced context system
         self.progressive_context_builder = ProgressiveContextBuilder()
         self.context_validator = ContextValidator()
         
